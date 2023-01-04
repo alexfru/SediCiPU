@@ -17,7 +17,7 @@ associated with microcomputers based on the intel 8080 CPU and
 its closest "successor", the Zylog Z80 CPU.
 
 However, such 8-bit CPUs were greatly underpowered due to overly
-simplistic and non-orthoginal ISAs, lacking many useful
+simplistic and non-orthogonal ISAs, lacking many useful
 instructions. This made it difficult to write and generate
 efficient code for them.
 
@@ -448,7 +448,7 @@ Unconditional jumps:
 
     advances pc to the address of the immediately following
     instruction plus an 8-bit immediate sign-extended to 16 bits
-    (pc = pc + 2 + sing-extended simm8)
+    (pc = pc + 2 + sign-extended simm8)
 
 -   jmp r0
 
@@ -470,7 +470,7 @@ Conditional jumps:
     parity condition is available to check: np=po/flags.PF==0),
     advances pc to the address of the immediately following
     instruction plus a 12-bit immediate sign-extended to 16 bits
-    (pc = pc + 3 + sing-extended simm12), otherwise continues to
+    (pc = pc + 3 + sign-extended simm12), otherwise continues to
     the immediately following instruction
 
 -   djnz lc, simm8
@@ -485,7 +485,7 @@ Conditional jumps:
     decrements the 8-bit loop counter register by 1 and if lc
     doesn't become 0, advances pc to the address of the
     immediately following instruction plus a 12-bit immediate
-    sign-extended to 16 bits (pc = pc + 3 + sing-extended simm12),
+    sign-extended to 16 bits (pc = pc + 3 + sign-extended simm12),
     otherwise continues to the immediately following instruction;
     does not modify the flags
 
@@ -590,7 +590,7 @@ gets whatever is shifted out of the register.
 
 These all are 16-bit operations and the flags are manipulated
 accordingly to this 16-bit size. That is, the sign bit is bit 15
-of the register containging the result, the zero and parity flags
+of the register containing the result, the zero and parity flags
 take into account all 16 bits of the result register, the
 carry/borrow-out is from bit 15 (the sign bit) and signed overflow
 is computed for 16-bit addition, subtraction and comparison.
@@ -1045,7 +1045,7 @@ So, here goes, it may be a little messy, though...
       something (e.g. a data structure) within that same something
       (especially, if only a part of the address is being stored),
       hence the space for "movb/movw (reg+imm8), reg" (where both
-      regs are the same) is reclaimed and resued for
+      regs are the same) is reclaimed and reused for
       "mov reg, simm8" and "adj reg, simm8"
 
 
@@ -1142,7 +1142,7 @@ So, here goes, it may be a little messy, though...
       and there's a rare need to initialize an array with ever
       increasing numbers, hence the space for
       "movb/movw (reg+imm16), reg" (where both regs are the same)
-      is reclaimed and resued for "push imm16", "j<cc> simm12" and
+      is reclaimed and reused for "push imm16", "j<cc> simm12" and
       "djnz lc, simm12"
     - we can get away with only being able to check the parity
       flag for zero and so we free the (sub)opcode space where
@@ -1361,7 +1361,7 @@ The rules, applied sequentially, are:
   because none of r0 through r7 is modified. In this case the
   first register listed in the instruction mnemonic is
   considered the destination register. Examples of such
-  instructions: any, outb/outw.
+  instructions: cmp, any, outb/outw.
 - Finally, if there's just one register in an instruction,
   whether explicitly encoded as "rr" or implicit (e.g. r0, r1 or
   r2), it's affected by sur1 and sur3.
@@ -1546,8 +1546,8 @@ Pseudo code for find(n)mb/find(n)mw operation:
     The memory operand can be at r0, r1, r2+simm8, sp+imm8.
 
     Notes:
-    - regs!=regs requires different register operands
-    - regs>regs requires 1st reg's number higher than 2nd (e.g.
+    - regs,!=regs requires different register operands
+    - regs,>regs requires 1st reg's number higher than 2nd's (e.g.
       "r1,r0" or "r2,r1" or "r2,r0", etc)
 
 
