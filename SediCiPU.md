@@ -900,6 +900,40 @@ from the register as usual.
         xchg  r0, r2
 
 
+#### 2.2.8 Example: efficient comparison with zero
+
+We can always use the cmp instruction to compare a register with
+zero but with a 16-bit immediate it takes 3 bytes to encode,
+which is kinda long. With most of largely worthless operand
+combinations eliminated from the ALU instructions, there doesn't
+seem much left as we can't and/or/any an arbitrary register with
+itself anymore. Here are some alternatives shorter than 3 bytes.
+
+        ; 1-byte comparison, r0 only
+        any  r0, r0
+        ; followed by one of:
+        j(n)z   ; jump if r0 == 0 (r0 != 0)
+        j(n)s   ; jump if r0 < 0 (r0 >= 0)
+        jl(e)s  ; jump if r0 < 0 (r0 <= 0)
+        jg(e)s  ; jump if r0 > 0 (r0 >= 0)
+
+        ; 2-byte comparison, r0-sp
+        adj  r1, 0
+        ; followed by one of:
+        j(n)z   ; jump if r1 == 0 (r1 != 0)
+        j(n)s   ; jump if r1 < 0 (r1 >= 0)
+        jl(e)s  ; jump if r1 < 0 (r1 <= 0)
+        jg(e)s  ; jump if r1 > 0 (r1 >= 0)
+
+        ; 1-byte comparison, r0-r2, mutating
+        neg  r2
+        j(n)z   ; jump if r2 == 0 (r2 != 0)
+
+        ; 1-byte comparison, r0-r2, mutating
+        add  r1, r1
+        j(n)c   ; jump if r1 < 0 (r1 >= 0)
+
+
 ## 3 The maxi
 
 The maximum ISA configuration unlocks all the CPU features that
